@@ -65,7 +65,7 @@ class _UpdateDataUserView extends State<UpdateDataUserView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Insert Data'),
+          title: const Text('Update Data'),
           centerTitle: true,
           leading: IconButton(
             onPressed: () {
