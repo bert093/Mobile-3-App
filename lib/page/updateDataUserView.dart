@@ -45,7 +45,7 @@ class _UpdateDataUserView extends State<UpdateDataUserView> {
           if (responseBody['status'] == 200) {
             // Memeriksa apakah respons dari server juga menunjukkan keberhasilan (misalnya, server mengembalikan status: 200 dalam JSON).
             print("$responseBody['result']");
-            Navigator.pushReplacement( //* gunain push replacement. Boleh gunain setState
+            Navigator.pushReplacement(
               context, MaterialPageRoute(
                 builder: (context) => Userview()
               )
@@ -65,9 +65,9 @@ class _UpdateDataUserView extends State<UpdateDataUserView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Update Data'),
+          title: const Text('Insert Data'),
           centerTitle: true,
-          leading: IconButton( //* menambahkan ini?
+          leading: IconButton(
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => Userview()));
             },
@@ -133,8 +133,8 @@ class _UpdateDataUserView extends State<UpdateDataUserView> {
                       ),
                     );
                   },
-                  label: Text('Update'),
-                  icon: Icon(Icons.upgrade),
+                  label: Text('Register'),
+                  icon: Icon(Icons.app_registration_rounded),
                 ),
               ],
             ),
