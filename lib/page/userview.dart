@@ -23,7 +23,7 @@ class _UserViewState extends State<Userview> {
 
   List _listData = [];
 
-  Future _getData() async {
+  Future _getData() async { //* Get Data User
     try {
       final respon = await http.get(Uri.parse(Api.getDataUser));
       if (respon.statusCode==200) {
@@ -38,7 +38,7 @@ class _UserViewState extends State<Userview> {
     }
   }
 
-    Future _deleteData(String id) async {
+    Future _deleteData(String id) async { //* delete data user
       try{
       var response = await http.post(Uri.parse(Api.deleteDataUser), // Mengambil URL endpoint API dari Api.register, mengonversinya ke objek Uri.
       headers: {'Content-type': 'application/x-www-form-urlencoded'}, //* Header Content-type: application/x-www-form-urlencoded memberi tahu server bahwa data dikirim dalam format application/x-www-form-urlencoded, format yang umum untuk mengirim data form dalam HTTP.
@@ -48,9 +48,14 @@ class _UserViewState extends State<Userview> {
         var responseBody = jsonDecode(response.body); // jsonDecode(response.body): Jika permintaan berhasil, response.body berisi respons dalam format JSON. Fungsi jsonDecode mengubah JSON string menjadi objek Map<String, dynamic> yang dapat digunakan dalam kode.
         if (responseBody['status'] == 200) { // Memeriksa apakah respons dari server juga menunjukkan keberhasilan (misalnya, server mengembalikan status: 200 dalam JSON).
           print("$responseBody['result']");
+          setState(() { //* gunain setState agar realtime menangkap datanya tanpa refresh (untuk delete data)
+            _getData();
+          });
         } else {
           print("$responseBody['result']");
         }
+      } else {
+        print(response.statusCode);
       }
     } catch (e) {
       print(e);
@@ -100,12 +105,36 @@ class _UserViewState extends State<Userview> {
                       ElevatedButton(
                         onPressed: () {
                           _deleteData(_listData[index]['id']);
-                          Navigator.pushReplacement(
-                            context, MaterialPageRoute(builder: (context) => Userview(),
-                            ),
-                          );
+                          // Navigator.pushReplacement(
+                          //   context, MaterialPageRoute(builder: (context) => Userview(),
+                          //   ),
+                          // );
                         },
                         child: Text('Delete'),
+                      ),
+                      SizedBox(width: 20),
+                      ElevatedButton(
+                        onPressed: () => showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text('Delete Alert'),
+                            content: Text('Yakin Ingin Dihapus?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  _deleteData(_listData[index]['id']);
+                                },
+                                child: Text('Ya'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text('Tidak'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        child: Text('Delete saja'),
                       ),
                     ],
                   ),
@@ -125,7 +154,7 @@ class _UserViewState extends State<Userview> {
             },
             label: Text('Register'),
             icon: Icon(Icons.app_registration_outlined),
-          )
+          ),
         ],
       ),
     );
