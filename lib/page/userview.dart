@@ -48,6 +48,9 @@ class _UserViewState extends State<Userview> {
         var responseBody = jsonDecode(response.body); // jsonDecode(response.body): Jika permintaan berhasil, response.body berisi respons dalam format JSON. Fungsi jsonDecode mengubah JSON string menjadi objek Map<String, dynamic> yang dapat digunakan dalam kode.
         if (responseBody['status'] == 200) { // Memeriksa apakah respons dari server juga menunjukkan keberhasilan (misalnya, server mengembalikan status: 200 dalam JSON).
           print("$responseBody['result']");
+          setState((){
+            _getData();
+          });
         } else {
           print("$responseBody['result']");
         }
@@ -67,6 +70,7 @@ class _UserViewState extends State<Userview> {
       body: Column( //* saya wrap menjadi Column
         children: [
           SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: DataTable(columns: [
               DataColumn(label: Text('Id')),
               DataColumn(label: Text('Username')),
@@ -90,6 +94,9 @@ class _UserViewState extends State<Userview> {
                             context, MaterialPageRoute(
                               builder: (context) => UpdateDataUserView(
                                 userData: _listData[index],
+                                onUpdate: () { //* + callback functions
+                                  _getData();
+                                },
                               ),
                             ),
                           );
@@ -106,6 +113,30 @@ class _UserViewState extends State<Userview> {
                           );
                         },
                         child: Text('Delete'),
+                      ),
+                      SizedBox(width: 20),
+                      ElevatedButton(
+                        onPressed: () => showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text('Delete alert'),
+                            content: Text('Yakin ingin dihapus?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  _deleteData(_listData[index]['id']);
+                                },
+                                child: Text('Ya'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text('Tidak'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        child: Text('Delete Alert'),
                       ),
                     ],
                   ),
@@ -125,7 +156,8 @@ class _UserViewState extends State<Userview> {
             },
             label: Text('Register'),
             icon: Icon(Icons.app_registration_outlined),
-          )
+          ),
+          SizedBox(width: 20),
         ],
       ),
     );

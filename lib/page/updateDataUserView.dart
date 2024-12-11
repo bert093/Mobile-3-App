@@ -6,15 +6,17 @@ import 'package:http/http.dart' as http;
 import 'package:mobile3_app/page/userview.dart';
 
 class UpdateDataUserView extends StatefulWidget {
-  const UpdateDataUserView({super.key, this.userData});
+  const UpdateDataUserView({super.key, this.userData, required this.onUpdate}); //* + update
 
   final Map<String, dynamic>? userData; //* tanda ? adalah null safety
+  final VoidCallback onUpdate; //* update
 
   @override
   State<UpdateDataUserView> createState() => _UpdateDataUserView();
 }
 
 class _UpdateDataUserView extends State<UpdateDataUserView> {
+
   @override
   void initState() {
     super.initState();
@@ -45,11 +47,8 @@ class _UpdateDataUserView extends State<UpdateDataUserView> {
           if (responseBody['status'] == 200) {
             // Memeriksa apakah respons dari server juga menunjukkan keberhasilan (misalnya, server mengembalikan status: 200 dalam JSON).
             print("$responseBody['result']");
-            Navigator.pushReplacement(
-              context, MaterialPageRoute(
-                builder: (context) => Userview()
-              )
-            );
+            widget.onUpdate(); //* panggil fungsi onUpdate
+            Navigator.pop(context); //* gunain navigator.pop
           } else {
             print("$responseBody['result']");
           }
